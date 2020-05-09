@@ -7,16 +7,13 @@ import 'package:udemy/services/auth/auth.dart';
 class SignInScreen extends StatelessWidget {
   SignInScreen({
     @required this.auth,
-    @required this.onSignIn
   }) : assert(auth != null);
 
   final AuthBase auth;
-  final Function(User) onSignIn;
 
   Future<void> _signInAnonymously() async {
     try {
-      final user = await auth.signInAnonymously();
-      onSignIn(user);
+      await auth.signInAnonymously();
     } catch (e) {
       print(e.toString());
     }
