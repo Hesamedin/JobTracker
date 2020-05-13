@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:udemy/app/sign_in/emai_sign_in_screen.dart';
 import 'package:udemy/app/sign_in/sign_in_button.dart';
 import 'package:udemy/app/sign_in/social_sign_in_button.dart';
 import 'package:udemy/services/auth/auth.dart';
@@ -35,6 +36,14 @@ class SignInScreen extends StatelessWidget {
     }
   }
 
+  void _signInWithEmail(BuildContext context) {
+    final route = MaterialPageRoute<void>(
+      fullscreenDialog: true,
+      builder: (context) => EmailSignInScreen(auth: auth),
+    );
+    Navigator.of(context).push(route);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,12 +51,12 @@ class SignInScreen extends StatelessWidget {
         title: Text('Time Tracker'),
         elevation: 2.0,
       ),
-      body: _buildContainer(),
+      body: _buildContainer(context),
       backgroundColor: Colors.grey[200],
     );
   }
 
-  Widget _buildContainer() {
+  Widget _buildContainer(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Column(
@@ -80,7 +89,7 @@ class SignInScreen extends StatelessWidget {
             text: 'Sign in with Email',
             textColor: Colors.white,
             color: Colors.teal[700],
-            onPressed: () {},
+            onPressed: () => _signInWithEmail(context),
           ),
           SizedBox(height: 8.0),
           Text(
