@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:udemy/common_logic/validators.dart';
 import 'package:udemy/common_widgets/form_submit_button.dart';
+import 'package:udemy/common_widgets/platform_alert_dialog.dart';
 import 'package:udemy/services/auth/auth.dart';
 
 enum EmailSignInFormType { signIn, register }
 
 class EmailSignInForm extends StatefulWidget with InputValidatorImpl {
-  final AuthBase auth;
-
-  EmailSignInForm({@required this.auth});
 
   @override
   _EmailSignInFormState createState() => _EmailSignInFormState();
@@ -22,6 +21,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   final FocusNode _passwordFocusNode = FocusNode();
 
   String get _email => _emailController.text.trim();
+
   String get _password => _passwordController.text.trim();
 
   EmailSignInFormType _formType = EmailSignInFormType.signIn;
@@ -35,14 +35,19 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       _isLoading = true;
     });
     try {
+      final auth = Provider.of<AuthBase>(context, listen: false);
       if (_formType == EmailSignInFormType.signIn) {
-        await widget.auth.signInWithEmailAndPassword(_email, _password);
+        await auth.signInWithEmailAndPassword(_email, _password);
       } else {
-        await widget.auth.createUserWithEmailAndPassword(_email, _password);
+        await auth.createUserWithEmailAndPassword(_email, _password);
       }
       Navigator.of(context).pop();
     } catch (e) {
-      print(e.toString());
+      PlatformAlertDialog(
+        title: 'Sign in failed',
+        content: e.toString(),
+        defaultActionText: 'OK',
+      ).show(context);
     } finally {
       setState(() {
         _isLoading = false;
@@ -51,7 +56,8 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   void _emailEditingComplete() {
-    final newFocus = widget.isEmailValid(_email) ? _passwordFocusNode : _emailFocusNode;
+    final newFocus =
+        widget.isEmailValid(_email) ? _passwordFocusNode : _emailFocusNode;
     FocusScope.of(context).requestFocus(newFocus);
   }
 
@@ -121,7 +127,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       decoration: InputDecoration(
         labelText: 'Email',
         hintText: 'test@test.com',
-        errorText: showErrorMessage ? widget.invalidEmailTextError: null,
+        errorText: showErrorMessage ? widget.invalidEmailTextError : null,
         enabled: _isLoading == false,
       ),
       focusNode: _emailFocusNode,
@@ -151,5 +157,4 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       onChanged: (password) => _updateState(),
     );
   }
-
 }

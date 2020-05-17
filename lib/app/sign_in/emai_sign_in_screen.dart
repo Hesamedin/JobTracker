@@ -4,9 +4,6 @@ import 'package:udemy/services/auth/auth.dart';
 import 'emal_sign_in_form.dart';
 
 class EmailSignInScreen extends StatelessWidget {
-  final AuthBase auth;
-
-  EmailSignInScreen({@required this.auth});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +19,7 @@ class EmailSignInScreen extends StatelessWidget {
 
   Widget _buildContainer() {
     return Padding(
-      child: Card(child: EmailSignInForm(auth: auth,)),
+      child: Card(child: EmailSignInForm()),
       padding: const EdgeInsets.all(16.0),
     );
   }
