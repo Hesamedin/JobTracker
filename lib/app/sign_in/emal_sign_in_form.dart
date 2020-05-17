@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:udemy/common_logic/validators.dart';
 import 'package:udemy/common_widgets/form_submit_button.dart';
-import 'package:udemy/common_widgets/platform_alert_dialog.dart';
+import 'package:udemy/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:udemy/services/auth/auth.dart';
 
 enum EmailSignInFormType { signIn, register }
@@ -42,11 +43,10 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         await auth.createUserWithEmailAndPassword(_email, _password);
       }
       Navigator.of(context).pop();
-    } catch (e) {
-      PlatformAlertDialog(
+    } on PlatformException catch (e) {
+      PlatformExceptionAlertDialog(
         title: 'Sign in failed',
-        content: e.toString(),
-        defaultActionText: 'OK',
+        exception: e,
       ).show(context);
     } finally {
       setState(() {
