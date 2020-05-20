@@ -10,10 +10,15 @@ import 'package:udemy/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:udemy/services/auth/auth.dart';
 
 class SignInScreen extends StatelessWidget {
+  const SignInScreen({Key key, @required this.bloc}) : super(key: key);
+  final SignInBloc bloc;
+
   static Widget create(BuildContext context) {
     return Provider<SignInBloc>(
       create: (_) => SignInBloc(),
-      child: SignInScreen(),
+      dispose: (context, bloc) => bloc.dispose(),
+      child: Consumer<SignInBloc>(
+          builder: (context, bloc, _) => SignInScreen(bloc: bloc)),
     );
   }
 
@@ -25,7 +30,6 @@ class SignInScreen extends StatelessWidget {
   }
 
   Future<void> _signInAnonymously(BuildContext context) async {
-    final bloc = Provider.of<SignInBloc>(context, listen: false);
     try {
       bloc.setIsLoading(true);
       final auth = Provider.of<AuthBase>(context, listen: false);
@@ -38,7 +42,6 @@ class SignInScreen extends StatelessWidget {
   }
 
   Future<void> _signInWithGoogle(BuildContext context) async {
-    final bloc = Provider.of<SignInBloc>(context, listen: false);
     try {
       bloc.setIsLoading(true);
       final auth = Provider.of<AuthBase>(context, listen: false);
@@ -53,7 +56,6 @@ class SignInScreen extends StatelessWidget {
   }
 
   Future<void> _signInWithFacebook(BuildContext context, bool isLoading) async {
-    final bloc = Provider.of<SignInBloc>(context, listen: false);
     try {
       bloc.setIsLoading(true);
       final auth = Provider.of<AuthBase>(context, listen: false);
@@ -77,7 +79,6 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<SignInBloc>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text('Time Tracker'),
@@ -88,8 +89,7 @@ class SignInScreen extends StatelessWidget {
           initialData: false,
           builder: (context, snapshot) {
             return _buildContainer(context, snapshot.data);
-          }
-      ),
+          }),
       backgroundColor: Colors.grey[200],
     );
   }
@@ -119,8 +119,9 @@ class SignInScreen extends StatelessWidget {
             text: 'Sign in with Facebook',
             textColor: Colors.white,
             color: Color(0xFF334D92),
-            onPressed: isLoading ? null : () =>
-                _signInWithFacebook(context, isLoading),
+            onPressed: isLoading
+                ? null
+                : () => _signInWithFacebook(context, isLoading),
           ),
           SizedBox(height: 8.0),
           SignInButton(
