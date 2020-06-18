@@ -6,15 +6,15 @@ import 'package:udemy/common_widgets/form_submit_button.dart';
 import 'package:udemy/common_widgets/platform_exception_alert_dialog.dart';
 import 'package:udemy/services/auth/auth.dart';
 
-enum EmailSignInFormType { signIn, register }
+import 'email_sign_in_model.dart';
 
-class EmailSignInForm extends StatefulWidget with InputValidatorImpl {
-
+class EmailSignInFormStateful extends StatefulWidget with InputValidatorImpl {
   @override
-  _EmailSignInFormState createState() => _EmailSignInFormState();
+  _EmailSignInFormStatefulState createState() =>
+      _EmailSignInFormStatefulState();
 }
 
-class _EmailSignInFormState extends State<EmailSignInForm> {
+class _EmailSignInFormStatefulState extends State<EmailSignInFormStateful> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -24,9 +24,7 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   String get _email => _emailController.text.trim();
 
   String get _password => _passwordController.text.trim();
-
   EmailSignInFormType _formType = EmailSignInFormType.signIn;
-
   bool _submitted = false;
   bool _isLoading = false;
 
